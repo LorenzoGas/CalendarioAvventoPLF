@@ -26,7 +26,7 @@ int pinNataleOverrideON = A4;
 int pinOverrideOFF = A6;
 
 int pinRelayPresepe = 6;
-int pinRelayContorno = 7;
+int pinRelayContorno[] = {9,10,11};
 int pinRelayNatale = 13;
 int pinRelayGiorni[]= {34,35,36,37,38,39,40,41, 42,43,44,45,46,47,48,49, 26,27,28,29,30,31,32,33};
 
@@ -46,17 +46,18 @@ void setup()
   pinMode(pinOverrideOFF, INPUT);
 
   //pins out
-  pinMode(pinRelayContorno, OUTPUT);
-  digitalWrite(pinRelayContorno, HIGH); //OFF
+  pinMode(pinRelayContorno[0], OUTPUT);
+  pinMode(pinRelayContorno[1], OUTPUT);
+  pinMode(pinRelayContorno[2], OUTPUT);
   pinMode(pinRelayPresepe, OUTPUT);
-  digitalWrite(pinRelayPresepe, HIGH); //OFF
   pinMode(pinRelayNatale, OUTPUT);
-  digitalWrite(pinRelayNatale, HIGH); //OFF
   for(int i = 0; i < NUM_GIORNI; i++)
   {
-    pinMode(pinRelayGiorni[i], OUTPUT); 
-    digitalWrite(pinRelayGiorni[i], HIGH); //OFF
+    pinMode(pinRelayGiorni[i], OUTPUT);
   }
+
+  //tunr off all
+  turnOffAll();
 }
 
 void loop()
@@ -77,7 +78,7 @@ void loop()
   }
   else if (digitalRead(pinContornoOverrideON) == HIGH)
   {
-    digitalWrite(pinRelayContorno, LOW); //turn on contorno
+    turnOnContorno(); //turn on contorno
     Serial.println("pinContornoOverrideON");
   }
   else if (digitalRead(pinGiorniOverrideON) == HIGH)
@@ -119,7 +120,7 @@ void turnOnDay(int num)
   if (num == 25) //its Christmas
   {
     //OH OH OH!
-    digitalWrite(pinRelayContorno, HIGH); //OFF
+    turnOffContorno(); //OFF
     turnOffGiorni();
     
     if(nataleAnimationDone == 0)
@@ -134,19 +135,19 @@ void turnOnDay(int num)
   }
   else if(num >= 26) //its after Christmas
   {
-    digitalWrite(pinRelayContorno, HIGH); //OFF
+    turnOffContorno(); //OFF
     turnOffGiorni();
     digitalWrite(pinRelayNatale, HIGH); //OFF
     
     digitalWrite(pinRelayPresepe, LOW); //ON
     Serial.println("-------!!its after Christmas!!-------");
   }
-  else if(num == 1) //its the 1st, turn on at 18:00 for inauguration
+  else if(num == 1) //its the 1st
   { 
     digitalWrite(pinRelayPresepe, HIGH); //OFF
     digitalWrite(pinRelayNatale, HIGH); //OFF
 
-    if(t.hour >= 18)
+    if((t.hour >= 17)&&(t.min >= 30)) //turn on at 17:30 for inauguration
     {
       if(inaugurationAnimationDone == 0)
       {
@@ -156,7 +157,7 @@ void turnOnDay(int num)
         specialAnimation();
         //turn on only 1 and contorno
         delay(3000);
-        digitalWrite(pinRelayContorno, LOW); //ON
+        turnOnContorno(); //ON
         digitalWrite(pinRelayGiorni[0], LOW);//ON
         for(int i = 1; i < NUM_GIORNI; i++)
         {
@@ -166,7 +167,7 @@ void turnOnDay(int num)
       else
       {
         Serial.println("inauguration was done before");
-        digitalWrite(pinRelayContorno, LOW); //ON
+        turnOnContorno(); //ON
         digitalWrite(pinRelayGiorni[0], LOW);//ON
         for(int i = 1; i < NUM_GIORNI; i++)
         {
@@ -181,7 +182,7 @@ void turnOnDay(int num)
     digitalWrite(pinRelayPresepe, HIGH); //OFF
     digitalWrite(pinRelayNatale, HIGH); //OFF
     
-    digitalWrite(pinRelayContorno, LOW); //ON    
+    turnOnContorno(); //ON    
     if (num > lastLoopDay) //the day just changed 
     {
       animationGiorni(num);
@@ -218,7 +219,7 @@ void specialAnimation()
   for(int i = 1; i <= 5; i++) //crescendo
   {
     turnOnAllGiorni();
-    digitalWrite(pinRelayContorno, LOW); //ON
+    turnOnContorno(); //ON
     delay(3000/i); //stay on for mills
     turnOffAll();
     delay(1500/i); //stay off for mills
@@ -238,7 +239,7 @@ void specialAnimation()
 
 void turnOffAll()
 {
-  digitalWrite(pinRelayContorno, HIGH); //OFF
+  turnOffContorno(); //OFF
   digitalWrite(pinRelayPresepe, HIGH); //OFF
   digitalWrite(pinRelayNatale, HIGH); //OFF
   turnOffGiorni();
@@ -254,4 +255,18 @@ void turnOnAllGiorni()
 {
   for(int i = 0; i < NUM_GIORNI; i++)
     digitalWrite(pinRelayGiorni[i], LOW); //ON
+}
+
+void turnOnContorno()
+{ 
+  digitalWrite(pinRelayContorno[0], LOW); //ON
+  digitalWrite(pinRelayContorno[1], LOW); //ON
+  digitalWrite(pinRelayContorno[2], LOW); //ON
+}
+
+void turnOffContorno()
+{ 
+  digitalWrite(pinRelayContorno[0], HIGH); //OFF
+  digitalWrite(pinRelayContorno[1], HIGH); //OFF
+  digitalWrite(pinRelayContorno[2], HIGH); //OFF
 }
