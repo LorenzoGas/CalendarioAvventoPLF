@@ -20,7 +20,7 @@ void setup()
     Serial.println("GET time");
 
     //Serial.println("Setting time");     //To set time manually uncomment > run > comment > run again > check time in serial monitor
-    //parse_cmd("T000122421112019",16);   //TSSMMHHWDDMMYYYY //W = day of the week (1 is Monday)
+    //parse_cmd("T303712701122019",16);   //TSSMMHHWDDMMYYYY //W = day of the week (1 is Monday)
 }
 
 void loop()

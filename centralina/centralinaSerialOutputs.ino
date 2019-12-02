@@ -114,6 +114,7 @@ void turnOnDay(int num)
   if (num == 25) //its Christmas
   {
     //OH OH OH!
+    Serial.println("-------!!its Christmas!!-------");
     turnOffContorno();
     turnOffGiorni();
     
@@ -124,22 +125,26 @@ void turnOnDay(int num)
       delay(3000);
     }
     digitalWrite(pinRelayNatale, LOW); //ON
-    digitalWrite(pinRelayPresepe, LOW); //ON 
-    Serial.println("-------!!its Christmas!!-------");
+    digitalWrite(pinRelayPresepe, LOW); //ON
+    Serial.println("turned ON natale and presepe");
   }
   else if(num >= 26) //its after Christmas
   {
+    Serial.println("-------!!its after Christmas!!-------");
     turnOffContorno();
     turnOffGiorni();
     digitalWrite(pinRelayNatale, HIGH); //OFF
-    
+    Serial.println("turned OFF natale");
+
     digitalWrite(pinRelayPresepe, LOW); //ON
-    Serial.println("-------!!its after Christmas!!-------");
+    Serial.println("turned ON presepe");
   }
   else if(num == 1) //its the 1st, turn on at 17:00 for inauguration
   { 
+    Serial.println("-------!!its the 1st!!-------");
     digitalWrite(pinRelayPresepe, HIGH); //OFF
     digitalWrite(pinRelayNatale, HIGH); //OFF
+    Serial.println("turned OFF natale and presepe");
 
     if(t.hour >= 17)
     {
@@ -157,6 +162,7 @@ void turnOnDay(int num)
         {
           digitalWrite(pinsRelaysGiorni[i], HIGH);//OFF
         }
+        Serial.println("turned ON the 1st, turned OFF the other numbers");
       }
       else
       {
@@ -167,24 +173,26 @@ void turnOnDay(int num)
         {
           digitalWrite(pinsRelaysGiorni[i], HIGH);//OFF
         }
+        Serial.println("turned ON the 1st, turned OFF the other numbers");
       }
     }
     else{
       turnOffContorno();
       turnOffGiorni();
     }
-    Serial.println("-------!!its the 1st!!-------");
   }
   else
   {
+    Serial.println("Its the " + String(num));
     digitalWrite(pinRelayPresepe, HIGH); //OFF
     digitalWrite(pinRelayNatale, HIGH); //OFF
+    Serial.println("turned OFF natale and presepe");
     
     turnOnContorno();    
     if (num > lastLoopDay) //the day just changed 
     {
-      animationGiorni(num);
       Serial.println("the day just changed");
+      animationGiorni(num);
     }
     else
     {
@@ -202,6 +210,7 @@ void turnOnDay(int num)
 
 void animationGiorni(int num)
 {
+  Serial.println("animate giorni");
   turnOffGiorni();
   for(int i = 0; (i < num) && (i < NUM_GIORNI); i++) //progressively turn on days
   {
@@ -256,11 +265,13 @@ void specialAnimation()
 void turnOnContorno(){
   for(int pin : pinsRelaysContorno)
     digitalWrite(pin, LOW); //ON
+  Serial.println("turned ON contorno");
 }
 
 void turnOffContorno(){
   for(int pin : pinsRelaysContorno)
     digitalWrite(pin, HIGH); //OFF
+  Serial.println("turned OFF contorno");
 }
 
 void turnOffAll()
@@ -268,6 +279,7 @@ void turnOffAll()
   turnOffContorno();
   digitalWrite(pinRelayPresepe, HIGH); //OFF
   digitalWrite(pinRelayNatale, HIGH); //OFF
+  Serial.println("turned OFF natale and presepe");
   turnOffGiorni();
 }
 
@@ -275,10 +287,12 @@ void turnOffGiorni()
 {
   for(int i = 0; i < NUM_GIORNI; i++)
     digitalWrite(pinsRelaysGiorni[i], HIGH); //OFF
+  Serial.println("turned OFF all giorni");
 }
 
 void turnOnAllGiorni()
 {
   for(int i = 0; i < NUM_GIORNI; i++)
     digitalWrite(pinsRelaysGiorni[i], LOW); //ON
+  Serial.println("turned ON all giorni");
 }
