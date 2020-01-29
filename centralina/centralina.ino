@@ -6,7 +6,7 @@
 struct ts t;
 
 //consts
-int TIME_START = 17;
+int TIME_START = 16;
 int TIME_FINISH = 8;
 int NUM_GIORNI = 24;
 int ANIMATION_SPEED = 200;
