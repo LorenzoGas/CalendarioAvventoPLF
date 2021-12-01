@@ -19,8 +19,20 @@ void setup()
     memset(recv, 0, BUFF_MAX);
     Serial.println("GET time");
 
-    //Serial.println("Setting time");     //To set time manually uncomment > run > comment > run again > check time in serial monitor
-    //parse_cmd("T303712701122019",16);   //TSSMMHHWDDMMYYYY //W = day of the week (1 is Monday)
+    Serial.println("Setting time");     //To set time manually uncomment > run > comment > run again > check time in serial monitor
+
+    /* COME IMPOSTARE ORA E DATA
+        1. impostare la stringa sotto con "T" + SS(Secondi) + MM(Minuti) + HH(Ora) + W(Giorno della sett 1 é lunedi) + DD(Giorno) + MM(Mese) + YYYY(Anno)
+        2. Caricare il programma su arduino con -> in alto a sx di ArduinoIDE
+        3. Il caricamento avviene circa in 10 secondi (tenerne conto per l'ora corretta)
+        4. Commentare con // la linea di parse_cmd
+        5. Caricare nuovamente il programma
+        6. Nel serial monitor vedere se l'ora é corretta
+        7. Verificare che la batteria a tampone sia inserita correttamente prima di scollegare arduino
+        8. Proseguire con il caricamento del programma Centralina    
+    */
+    
+    parse_cmd("T001319418112021",16);   //TSSMMHHWDDMMYYYY //W = day of the week (1 is Monday)
 }
 
 void loop()

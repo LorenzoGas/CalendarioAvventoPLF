@@ -7,7 +7,7 @@ struct ts t;
 
 //consts
 int TIME_START = 16;
-int TIME_FINISH = 8;
+int TIME_FINISH = 9;
 int NUM_GIORNI = 24;
 int ANIMATION_SPEED = 200;
 
@@ -83,7 +83,7 @@ void loop()
     Serial.println("Christmas Override ON");
     turnOnDay(25); //turn on like its christmas
     nataleAnimationDone = false;
-    delay(10000);
+    delay(15000);
     turnOffAll();
   }
   else //no override
@@ -91,7 +91,7 @@ void loop()
     Serial.println("no overrides");
     if ((t.mon == 12) || ((t.mon == 1) && (t.mday <= 6))) //turn on during Dec and until the 6th of Jan
     {
-      if ((t.hour >= TIME_START) || (t.hour < TIME_FINISH)) //if its between TIME_START and TIME_FINISH
+      if ((t.hour >= TIME_START) || (t.hour < TIME_FINISH) || ((t.mon == 12) && (t.mday == 25))) //if its between TIME_START and TIME_FINISH or christmas
       {
         if(t.mon == 12)
           turnOnDay(t.mday); //december turns on normal days
@@ -121,7 +121,7 @@ void turnOnDay(int num)
     {
       nataleAnimationDone = true;
       specialAnimation();
-      delay(3000);
+      delay(2000);
     }
     digitalWrite(pinRelayNatale, LOW); //ON
     digitalWrite(pinRelayPresepe, LOW); //ON 
@@ -136,12 +136,12 @@ void turnOnDay(int num)
     digitalWrite(pinRelayPresepe, LOW); //ON
     Serial.println("-------!!its after Christmas!!-------");
   }
-  else if(num == 1) //its the 1st, turn on at 17:00 for inauguration
+  else if(num == 1) //its the 1st, turn on at 18:00 for inauguration
   { 
     digitalWrite(pinRelayPresepe, HIGH); //OFF
     digitalWrite(pinRelayNatale, HIGH); //OFF
 
-    if(t.hour >= 17)
+    if(t.hour >= 18)
     {
       if(!inaugurationAnimationDone)
       {
@@ -150,7 +150,7 @@ void turnOnDay(int num)
         Serial.println(inaugurationAnimationDone);
         specialAnimation();
         //turn on only 1 and contorno
-        delay(3000);
+        delay(2000);
         turnOnContorno();
         digitalWrite(pinsRelaysGiorni[0], LOW);//ON
         for(int i = 1; i < NUM_GIORNI; i++)
@@ -221,7 +221,6 @@ void specialAnimation()
       Serial.println(String(i+1) + " " + String(NUM_GIORNI-i) + " ON");
       delay(500-100*j);
     }
-    delay(2000/j);
     for(int i = NUM_GIORNI/2; i > 0; i--) //serpentina off
     {
       digitalWrite(pinsRelaysGiorni[i-1], HIGH);//OFF
@@ -229,9 +228,8 @@ void specialAnimation()
       Serial.println(String(i) + " " + String(NUM_GIORNI-i+1) + " OFF");
       delay(500-100*j);
     }
-    delay(2000/j);
   }
-  
+  delay(1000);
   for(int i = 1; i <= 5; i++) //crescendo
   {
     turnOnAllGiorni();
